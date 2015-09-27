@@ -1,0 +1,13 @@
+importFrom("methods", "as", "slot", "slot<-")
+import(sp)
+import(rgeos)
+import(maptools)
+
+
+export(
+ clgeo_GeometryReport,
+ clgeo_CollectionReport,
+ clgeo_SummaryReport,
+ clgeo_SuspiciousFeatures,
+ clgeo_Clean
+)
