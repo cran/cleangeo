@@ -17,12 +17,15 @@
 #' for which the output should bounded. Default value is NULL (\emph{i.e.} the output
 #' will include features for which both errors and errors were raised.). At now, this
 #' argument accepts the error type \code{"ORPHANED_HOLE"}.
-#' @param print.log Indicates wether the clean logs have to be printed. Default 
+#' @param strategy advanced strategy to clean geometries. Default is "POLYGONATION",
+#'        alternate value is "BUFFER" (old method).
+#' @param verbose Indicates wether the clean logs have to be printed. Default 
 #' value is FALSE.
 #' @return an object extending the \code{\link[sp]{Spatial-class}}
 #' as defined in \pkg{sp}, with cleaned geometries.
 #'
 #' @examples
+#' \donttest{
 #'  require(maptools)
 #'  file <- system.file("extdata", "example.shp", package = "cleangeo")
 #'  sp <- readShapePoly(file)
@@ -30,78 +33,138 @@
 #'  sp.clean <- clgeo_Clean(sp)
 #'  report.clean <- clgeo_CollectionReport(sp.clean)
 #'  clgeo_SummaryReport(report.clean)
-#'
+#' }
+#' 
 #' @aliases clgeo_Clean
 #' 
 #' @keywords geometry validity summary clean
 #' 
+#' @note About cleaning strategy:
+#' The polygonation method is a tentative alternate method to triangulation to clean
+#' geometries and to the classical often used 'buffer' approach. In the polygonation
+#' method, triangulation is skipped and a re-polygonation intuitive algorithm is 
+#' applied to rebuild the source invalid geometry into one or more valid polygonal
+#' geometries.
+#' 
 #'
-clgeo_Clean <- function(sp, errors.only = NULL, print.log = FALSE){
+clgeo_Clean <- function(sp, errors.only = NULL,
+                        strategy = "POLYGONATION",
+                        verbose = FALSE){
+  
+  if(!(strategy %in% c("POLYGONATION", "BUFFER")))
+     stop("Unknown advanced cleaning method. Accepted values: 'POLYGONATION', 'BUFFER'")
   
   report <- clgeo_CollectionReport(sp)
   nv <- clgeo_SuspiciousFeatures(report, errors.only)
-
-  fixed.sp <- SpatialPolygons(
-    Srl = lapply(1:length(sp), function(x){
-      polygon <- slot(sp, "polygons")[[x]]
-      ID <- slot(polygon, "ID")
-      if(!all(is.na(nv))){
-        if(x %in% nv){          
-          polygons <- slot(polygon, "Polygons")
-          poly.nb <- length(polygons)
-          removedHoles <- 0
+  
+  fixed.sp.list <- lapply(1:length(sp), function(x){
+    polygon <- slot(sp, "polygons")[[x]]
+    ID <- slot(polygon, "ID")
+    if(!all(is.na(nv))){
+      if(x %in% nv){          
+        polygons <- slot(polygon, "Polygons")
+        poly.nb <- length(polygons)
+        removedHoles <- vector()
+        
+        if(poly.nb > 0){
+          newpolygons <- list()
           for(i in 1:poly.nb){
             #if we found an orphaned hole, we remove it
-            if(slot(polygons[[i]], "hole")
-               & dim(unique(slot(polygons[[i]], "coords")))[1] < 3){
-              
-              if(removedHoles == 0 & print.log){
-                print(paste("Cleaning orphaned holes at index ", x, sep=""))
+            if(slot(polygons[[i]], "hole")){
+              if(dim(unique(slot(polygons[[i]], "coords")))[1] < 3){
+                
+                if(length(removedHoles) == 0 & verbose){
+                  print(paste("Cleaning orphaned holes at index ", x, sep=""))
+                }
+                removedHoles <- c(removedHoles, i)
+              }else{
+                newpolygon <- polygons[[i]]
+                slot(newpolygon, "hole") <- TRUE
+                newpolygons <- c(newpolygons, newpolygon)
               }
-              
-              polygons[[i - removedHoles]] <- NULL
-              removedHoles <- removedHoles + 1
-              slot(polygon, "Polygons") <- polygons
-            }
-          }
-          
-          polygon <- SpatialPolygons(Srl = list(polygon))
-          
-          #testing validity after removing holes
-          isValid <- report[x,]$valid
-          if(removedHoles > 0){
-            if(print.log){
-              print(paste("Checking geometry validity at index ", x, sep=""))
+            }else{
+              newpolygon <- polygons[[i]]
+              slot(newpolygon, "hole") <- FALSE
+              newpolygons <- c(newpolygons, newpolygon)
             }
             
-            slot(polygon, "polygons") <- lapply(slot(polygon, "polygons"),
-                                                checkPolygonsHoles)
-            isValid <- gIsValid(polygon)
+          }
+          slot(polygon, "Polygons") <- newpolygons
+        }
+        polygon <- SpatialPolygons(Srl = list(polygon))
+        
+        #testing validity after removing holes
+        isValid <- report[x,]$valid
+        if(length(removedHoles) > 0){
+          if(verbose){
+            print(paste("Checking geometry validity at index ", x, sep=""))
           }
           
-          #test clean geometry validity
-          if(is.null(errors.only) && !isValid){
-            if(print.log){
-              print(paste("Cleaning geometry at index ", x, sep=""))
-            }
-            polygon <- gBuffer(polygon, id = ID, width = 0)
+          tryCatch({
+            slot(polygon, "polygons") <<- lapply(slot(polygon, "polygons"), checkPolygonsHoles)
+          },error = function(err){invisible(err)})
+          
+          tryCatch({
+            isValid <<- gIsValid(polygon)
+          },error=function(err){invisible(err)})
+        }
+        
+        #test clean geometry validity
+        if(is.null(errors.only) & !isValid){
+          if(verbose){
+            print(paste("Cleaning geometry at index ", x, sep=""))
           }
+          if(strategy == "POLYGONATION"){
+            #run polygonation algorithm
+            polygon <- clgeo_CleanByPolygonation.SpatialPolygons(polygon)
+            
+          }else if(strategy == "BUFFER"){
+            #try applying buffer attempts
+            attempt <- 1
+  		      polygon <- gBuffer(polygon, id = ID, width = 0)
+  		      while(attempt < 3){
+  			      if(!gIsValid(polygon)){
+  				      attempt <- attempt + 1
+        				polygon <- gBuffer(polygon, id = ID, width = 0)
+  			      }else{
+  				      break;
+  			      }
+  		      }
+          }
+        }
+        if(!is.null(polygon)){
           polygon <- polygon@polygons[[1]]
+          slot(polygon, "ID") <- ID #index integrity
+        }else{
+          if(verbose){
+            print(paste("Removing false polygon at index ", x, sep=""))
+          }
         }
       }
-      
-      #index integrity
-      slot(polygon, "ID") <- ID
-      
-      return(polygon)
-    }),
-    proj4string = CRS(proj4string(sp))
-  )
+    }
+    
+    return(polygon)
+  })
   
-  if(class(sp) == "SpatialPolygonsDataFrame"){
-    sp.df <- as(sp, "data.frame")
-    row.names(sp.df) <- sapply(slot(fixed.sp,"polygons"), slot, "ID")
-    fixed.sp <- SpatialPolygonsDataFrame(Sr = fixed.sp, data = sp.df)
+  if(!is.list(fixed.sp.list)) fixed.sp.list <- as.list(fixed.sp.list)
+  fixed.sp.list <- fixed.sp.list[!sapply(fixed.sp.list, is.null)]
+  
+  fixed.sp <- NULL
+  if(length(fixed.sp.list) > 0){
+    fixed.sp <- SpatialPolygons(
+      Srl = fixed.sp.list,
+      proj4string = CRS(proj4string(sp))
+    )
+    
+    if(class(sp) == "SpatialPolygonsDataFrame"){
+      sp.df <- as(sp, "data.frame")
+      ids <- sapply(slot(fixed.sp,"polygons"), slot, "ID")
+      if(nrow(sp.df) != length(ids)){
+        sp.df <- sp.df[ids,]
+      }
+      row.names(sp.df) <- ids
+      fixed.sp <- SpatialPolygonsDataFrame(Sr = fixed.sp, data = sp.df)
+    }
   }
   
   return(fixed.sp)

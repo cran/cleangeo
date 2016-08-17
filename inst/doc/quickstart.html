@@ -218,18 +218,43 @@ hr {
 
 <h2>Install cleangeo</h2>
 
-<p>For the moment, <code>cleangeo</code> can be installed from its development repository hosted in Github. For this, you will need the <code>devtools</code> package and run:</p>
+<p><code>cleangeo</code> is available for download from CRAN. To get the latest <code>cleangeo</code> you can install it from its development repository hosted in Github. For this, you will need the <code>devtools</code> package and run:</p>
 
 <pre><code class="r">devtools::install_github(&quot;eblondel/cleangeo&quot;)
 </code></pre>
 
-<p>It is planned to publish soon <code>cleangeo</code> to CRAN.</p>
-
 <h2>Load cleangeo</h2>
 
-<p>To load rsdmx in R, do the following:</p>
+<p>To load the package in R, do the following:</p>
 
 <pre><code class="r">library(cleangeo)
+</code></pre>
+
+<pre><code>## Loading required package: rgeos
+</code></pre>
+
+<pre><code>## Warning: package &#39;rgeos&#39; was built under R version 3.2.5
+</code></pre>
+
+<pre><code>## rgeos version: 0.3-19, (SVN revision 524)
+##  GEOS runtime version: 3.5.0-CAPI-1.9.0 r4084 
+##  Linking to sp version: 1.2-3 
+##  Polygon checking: TRUE
+</code></pre>
+
+<pre><code>## Loading required package: maptools
+</code></pre>
+
+<pre><code>## Warning: package &#39;maptools&#39; was built under R version 3.2.5
+</code></pre>
+
+<pre><code>## Loading required package: sp
+</code></pre>
+
+<pre><code>## Warning: package &#39;sp&#39; was built under R version 3.2.5
+</code></pre>
+
+<pre><code>## Checking rgeos availability: TRUE
 </code></pre>
 
 <h2>Work with cleangeo</h2>
@@ -239,14 +264,7 @@ hr {
 <pre><code class="r">file &lt;- system.file(&quot;extdata&quot;, &quot;example.shp&quot;, package = &quot;cleangeo&quot;)
 
 require(maptools)
-</code></pre>
-
-<pre><code>## Loading required package: maptools
-## Loading required package: sp
-## Checking rgeos availability: TRUE
-</code></pre>
-
-<pre><code class="r">sp &lt;- readShapePoly(file)
+sp &lt;- readShapePoly(file)
 </code></pre>
 
 <p>The next step is to <em>inspect</em> these spatial objects, in order to detect potential geometry issues, and make a <code>summary</code>:</p>
@@ -269,12 +287,13 @@ clgeo_SummaryReport(report)
 <pre><code class="r">sp.clean &lt;- clgeo_Clean(sp)
 </code></pre>
 
-<pre><code>## Warning in gBuffer(polygon, id = ID, width = 0): Polygons object missing
-## comment attribute ignoring hole(s). See function createSPComment.
+<pre><code>## Warning in RGEOSUnaryPredFunc(spgeom, byid, &quot;rgeos_isvalid&quot;): Ring Self-
+## intersection at or near point -120.78997488 38.344996299999998
 </code></pre>
 
-<pre><code>## Warning in gBuffer(polygon, id = ID, width = 0): Polygons object missing
-## comment attribute ignoring hole(s). See function createSPComment.
+<pre><code>## Warning in RGEOSUnaryPredFunc(spgeom, byid, &quot;rgeos_isvalid&quot;): Too
+## few points in geometry component at or near point -120.77903224000001
+## 38.459498609999997
 </code></pre>
 
 <p>And now? Well, let&#39;s check the new spatial objects!</p>
@@ -292,16 +311,7 @@ clgeo_SummaryReport(report.clean)
 <p>Spatial objects do not have geometry error anymore! To double check, we can try to check the geometry validity with <code>rgeos</code>:</p>
 
 <pre><code class="r">require(rgeos)
-</code></pre>
-
-<pre><code>## Loading required package: rgeos
-## rgeos version: 0.3-13, (SVN revision 508)
-##  GEOS runtime version: 3.4.2-CAPI-1.8.2 r3921 
-##  Linking to sp version: 1.2-0 
-##  Polygon checking: TRUE
-</code></pre>
-
-<pre><code class="r">sapply(slot(sp.clean, &quot;polygons&quot;), function(x){
+sapply(slot(sp.clean, &quot;polygons&quot;), function(x){
   gIsValid(SpatialPolygons(Srl = list(x)))
 })
 </code></pre>
