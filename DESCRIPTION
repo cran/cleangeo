@@ -1,6 +1,6 @@
 Package: cleangeo
-Version: 0.2
-Date: 2016-08-17
+Version: 0.2-1
+Date: 2016-11-14
 Title: Cleaning Geometries from Spatial Objects
 Author: Emmanuel Blondel <emmanuel.blondel1@gmail.com>
 Maintainer: Emmanuel Blondel <emmanuel.blondel1@gmail.com>
@@ -18,6 +18,6 @@ URL: https://github.com/eblondel/cleangeo
 VignetteBuilder: knitr
 BugReports: https://github.com/eblondel/cleangeo/issues
 NeedsCompilation: no
-Packaged: 2016-08-17 13:15:59 UTC; Emmanuel
+Packaged: 2016-11-14 23:10:01 UTC; Emmanuel
 Repository: CRAN
-Date/Publication: 2016-08-17 20:06:57
+Date/Publication: 2016-11-15 07:16:51

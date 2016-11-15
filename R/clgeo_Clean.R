@@ -52,7 +52,7 @@ clgeo_Clean <- function(sp, errors.only = NULL,
                         verbose = FALSE){
   
   if(!(strategy %in% c("POLYGONATION", "BUFFER")))
-     stop("Unknown advanced cleaning method. Accepted values: 'POLYGONATION', 'BUFFER'")
+    stop("Unknown advanced cleaning method. Accepted values: 'POLYGONATION', 'BUFFER'")
   
   report <- clgeo_CollectionReport(sp)
   nv <- clgeo_SuspiciousFeatures(report, errors.only)
@@ -74,7 +74,7 @@ clgeo_Clean <- function(sp, errors.only = NULL,
               if(dim(unique(slot(polygons[[i]], "coords")))[1] < 3){
                 
                 if(length(removedHoles) == 0 & verbose){
-                  print(paste("Cleaning orphaned holes at index ", x, sep=""))
+                  logger.info(sprintf("Cleaning orphaned holes at index %s", x))
                 }
                 removedHoles <- c(removedHoles, i)
               }else{
@@ -97,33 +97,41 @@ clgeo_Clean <- function(sp, errors.only = NULL,
         isValid <- report[x,]$valid
         if(length(removedHoles) > 0){
           if(verbose){
-            print(paste("Checking geometry validity at index ", x, sep=""))
+            logger.info(sprintf("Checking geometry validity at index %s", x))
           }
           
           tryCatch({
             slot(polygon, "polygons") <<- lapply(slot(polygon, "polygons"), checkPolygonsHoles)
-          },error = function(err){invisible(err)})
+          }, warning = function(msg){
+            if(verbose) logger.info(sprintf("Catched MAPTOOLS warning '%s'",msg))
+          }, error = function(err){
+            if(verbose) logger.info(sprintf("Catched MAPTOOLS error '%s'",err))
+          })
           
-          tryCatch({
-            isValid <<- gIsValid(polygon)
-          },error=function(err){invisible(err)})
+          isValid <<- clgeo_IsValid(polygon, verbose)
         }
         
         #test clean geometry validity
         if(is.null(errors.only) & !isValid){
           if(verbose){
-            print(paste("Cleaning geometry at index ", x, sep=""))
+            report.msg <- NULL
+            if(!is.na(report[x,"error_msg"])){
+              report.msg <- report[x,"error_msg"]
+            }else if(!is.na(report[x,"warning_msg"])){
+              report.msg <- report[x,"warning_msg"]
+            }
+            logger.info(sprintf("Cleaning geometry at index %s (%s)", x, report.msg))
           }
           if(strategy == "POLYGONATION"){
             #run polygonation algorithm
-            polygon <- clgeo_CleanByPolygonation.SpatialPolygons(polygon)
+            polygon <- clgeo_CleanByPolygonation.SpatialPolygons(polygon, verbose)
             
           }else if(strategy == "BUFFER"){
             #try applying buffer attempts
             attempt <- 1
   		      polygon <- gBuffer(polygon, id = ID, width = 0)
   		      while(attempt < 3){
-  			      if(!gIsValid(polygon)){
+  			      if(!clgeo_IsValid(polygon, verbose)){
   				      attempt <- attempt + 1
         				polygon <- gBuffer(polygon, id = ID, width = 0)
   			      }else{
@@ -137,7 +145,7 @@ clgeo_Clean <- function(sp, errors.only = NULL,
           slot(polygon, "ID") <- ID #index integrity
         }else{
           if(verbose){
-            print(paste("Removing false polygon at index ", x, sep=""))
+            logger.info(sprintf("Removing false polygon at index %s", x))
           }
         }
       }
