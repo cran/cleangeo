@@ -236,22 +236,16 @@ hr {
 <pre><code>## Warning: package &#39;rgeos&#39; was built under R version 3.2.5
 </code></pre>
 
-<pre><code>## rgeos version: 0.3-20, (SVN revision 535)
+<pre><code>## rgeos version: 0.3-23, (SVN revision 546)
 ##  GEOS runtime version: 3.5.0-CAPI-1.9.0 r4084 
-##  Linking to sp version: 1.2-3 
+##  Linking to sp version: 1.2-4 
 ##  Polygon checking: TRUE
 </code></pre>
 
 <pre><code>## Loading required package: maptools
 </code></pre>
 
-<pre><code>## Warning: package &#39;maptools&#39; was built under R version 3.2.5
-</code></pre>
-
 <pre><code>## Loading required package: sp
-</code></pre>
-
-<pre><code>## Warning: package &#39;sp&#39; was built under R version 3.2.5
 </code></pre>
 
 <pre><code>## Checking rgeos availability: TRUE
@@ -285,6 +279,10 @@ clgeo_SummaryReport(report)
 <p>The below one-line code uses <code>clgeo_Clean</code> on our spatial objects.</p>
 
 <pre><code class="r">sp.clean &lt;- clgeo_Clean(sp)
+</code></pre>
+
+<pre><code>## Warning in Polygon(cc[, 1:2], hole = FALSE): less than 4 coordinates in
+## polygon
 </code></pre>
 
 <p>And now? Well, let&#39;s check the new spatial objects!</p>
