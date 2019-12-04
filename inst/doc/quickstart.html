@@ -233,19 +233,16 @@ hr {
 <pre><code>## Loading required package: rgeos
 </code></pre>
 
-<pre><code>## Warning: package &#39;rgeos&#39; was built under R version 3.2.5
+<pre><code>## Loading required package: sp
 </code></pre>
 
-<pre><code>## rgeos version: 0.3-23, (SVN revision 546)
-##  GEOS runtime version: 3.5.0-CAPI-1.9.0 r4084 
-##  Linking to sp version: 1.2-4 
+<pre><code>## rgeos version: 0.5-1, (SVN revision 614)
+##  GEOS runtime version: 3.6.1-CAPI-1.10.1 
+##  Linking to sp version: 1.3-1 
 ##  Polygon checking: TRUE
 </code></pre>
 
 <pre><code>## Loading required package: maptools
-</code></pre>
-
-<pre><code>## Loading required package: sp
 </code></pre>
 
 <pre><code>## Checking rgeos availability: TRUE
@@ -261,6 +258,9 @@ require(maptools)
 sp &lt;- readShapePoly(file)
 </code></pre>
 
+<pre><code>## Warning: readShapePoly is deprecated; use rgdal::readOGR or sf::st_read
+</code></pre>
+
 <p>The next step is to <em>inspect</em> these spatial objects, in order to detect potential geometry issues, and make a <code>summary</code>:</p>
 
 <pre><code class="r">report &lt;- clgeo_CollectionReport(sp)
@@ -270,8 +270,7 @@ clgeo_SummaryReport(report)
 <pre><code>##              type     valid                 issue_type
 ##  rgeos_validity:2   Mode :logical   GEOM_VALIDITY:2   
 ##  NA&#39;s          :1   FALSE:2         NA&#39;s         :1   
-##                     TRUE :1                           
-##                     NA&#39;s :0
+##                     TRUE :1
 </code></pre>
 
 <p>By analysing this report, you will see that 2 of the 3 spatial objects are not valid. The issues deal with a problem of <em>geometry validity</em>. Quite interesting to have such comprehensive report, but <em>how to fix these issues?</em> This is where <strong>cleangeo</strong> can really help you! so let&#39;s try to <strong>clean</strong> these spatial objects.</p>
@@ -293,8 +292,7 @@ clgeo_SummaryReport(report.clean)
 
 <pre><code>##    type    valid         issue_type
 ##  NA&#39;s:3   Mode:logical   NA&#39;s:3    
-##           TRUE:3                   
-##           NA&#39;s:0
+##           TRUE:3
 </code></pre>
 
 <p>Spatial objects do not have geometry error anymore! To double check, we can try to check the geometry validity with <code>rgeos</code>:</p>
