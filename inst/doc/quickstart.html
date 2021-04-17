@@ -210,7 +210,7 @@ hr {
 
 <p>The goal of this document is to get you up and running with <strong>cleangeo</strong> as quickly as possible.</p>
 
-<p><strong>cleangeo</strong> was initially born from some assistance provided to users that were facing issues in processing spatial data in R (see the original post at <a href="http://gis.stackexchange.com/questions/113964/fixing-orphaned-holes-in-r">http://gis.stackexchange.com/questions/113964/fixing-orphaned-holes-in-r</a>).</p>
+<p><strong>cleangeo</strong> was initially born from some assistance provided to users that were facing issues in processing spatial data in R (see the original post at <a href="https://gis.stackexchange.com/questions/113964/fixing-orphaned-holes-in-r">https://gis.stackexchange.com/questions/113964/fixing-orphaned-holes-in-r</a>).</p>
 
 <p>The main problem with their data is that some spatial objects did not have valid geometries, exposing different types of geometry errors, preventing any easy spatial data processing with <strong>rgeos</strong>. Then, <strong>cleangeo</strong> was built in order to facilitate handling and catching <strong>rgeos</strong> geometry issues, and provide an utility to <em>clean</em> the spatial objects.</p>
 
@@ -236,6 +236,12 @@ hr {
 <pre><code>## Loading required package: sp
 </code></pre>
 
+<pre><code>## Warning: package &#39;sp&#39; was built under R version 4.0.3
+</code></pre>
+
+<pre><code>## Warning: multiple methods tables found for &#39;plot&#39;
+</code></pre>
+
 <pre><code>## rgeos version: 0.5-1, (SVN revision 614)
 ##  GEOS runtime version: 3.6.1-CAPI-1.10.1 
 ##  Linking to sp version: 1.3-1 
@@ -246,6 +252,10 @@ hr {
 </code></pre>
 
 <pre><code>## Checking rgeos availability: TRUE
+</code></pre>
+
+<pre><code>## Warning: replacing previous import &#39;sp::plot&#39; by &#39;rgeos::plot&#39; when loading
+## &#39;cleangeo&#39;
 </code></pre>
 
 <h2>Work with cleangeo</h2>
@@ -280,8 +290,7 @@ clgeo_SummaryReport(report)
 <pre><code class="r">sp.clean &lt;- clgeo_Clean(sp)
 </code></pre>
 
-<pre><code>## Warning in Polygon(cc[, 1:2], hole = FALSE): less than 4 coordinates in
-## polygon
+<pre><code>## Warning in Polygon(cc[, 1:2], hole = FALSE): less than 4 coordinates in polygon
 </code></pre>
 
 <p>And now? Well, let&#39;s check the new spatial objects!</p>

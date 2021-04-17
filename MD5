@@ -1,6 +1,6 @@
-741b25dcf32122b85fb3a08452ac874d *DESCRIPTION
+ee08a78d82ead8fc578c3dd7c99d307f *DESCRIPTION
 6ed17db860ae84f809d44a9f32f43108 *NAMESPACE
-f8388283ce19b960e5f1a9c21949b4c2 *R/cleangeo.R
+4b353a6d382c4bd27dc7ecc06b8f8cca *R/cleangeo.R
 f2e6889b2e580b43ec6e75e1a7c33162 *R/clgeo_Clean.R
 c72879c5bfdfeed493f61e2bf8fb8249 *R/clgeo_CleanByPolygonation.R
 3e43006393b646fa8cd45e4a71fb1494 *R/clgeo_CollectionReport.R
@@ -9,16 +9,16 @@ b5dfa496d64f60e687a0bb1b66f27ba3 *R/clgeo_GeometryReport.R
 ad217dacf71e8183b8cd4a70af754835 *R/clgeo_SummaryReport.R
 93db3adcd92d828c0a8c605b64c94d68 *R/clgeo_SuspiciousFeatures.R
 a3c58713183e4d0456a075ef91f16192 *R/clgeo_logger.R
-3f02e6cad7d98e9c6a2f188ef17c19bf *README.md
+979fd30fadf94221821afb9dadef64d2 *README.md
 a7eef42afad840fa2cc8d2e75e114d25 *build/vignette.rds
-4c7b89ba3e7a89daa4e2e883a2d5c980 *inst/doc/quickstart.R
-2a3edeb7314dfd2ab8d210f8247345fe *inst/doc/quickstart.Rmd
-ab80ee9f700bed627468852adc51ab93 *inst/doc/quickstart.html
+c5c2881005890db40dedd6dc5d7c5ac9 *inst/doc/quickstart.R
+b43fbaf42679ea9d07215614e8ca2104 *inst/doc/quickstart.Rmd
+dcd770eae4759fc07f86532470ca1576 *inst/doc/quickstart.html
 295890a8c6002cbd6f19965dc777df36 *inst/extdata/example.dbf
 77243eaa710f41ab2f47e79607741285 *inst/extdata/example.shp
 4b48fb863a4b2dc04600657226ff7ed6 *inst/extdata/example.shx
-70c36597b072ed6d220c5b8e532af331 *man/cleangeo.Rd
-446a887d8e0dee6e691ba9b47aede12f *man/clgeo_Clean.Rd
+5af15aa1daef356819200772dce03329 *man/cleangeo.Rd
+72e418bb5794046abd2fa8ed7a98ad88 *man/clgeo_Clean.Rd
 2ee8166749cdf21144581285e9a4d3bb *man/clgeo_CleanByPolygonation.Polygon.Rd
 e655ae55fe987cff337f24f5703b0056 *man/clgeo_CleanByPolygonation.Polygons.Rd
 5edc08eca1dbd68d3224a40c89581fa9 *man/clgeo_CleanByPolygonation.SpatialPolygons.Rd
@@ -30,4 +30,4 @@ bc878ae30159fad3f1dbd6eaff811837 *man/clgeo_SummaryReport.Rd
 4fb41726c95a9a838389e229344bb21f *tests/test-all.R
 51393d3b9f5c52abd02aaf3409f6f9a7 *tests/testthat/test_Clean.R
 d1c73268144263828c0cbc7ff84d21cc *tests/testthat/test_IsValid.R
-2a3edeb7314dfd2ab8d210f8247345fe *vignettes/quickstart.Rmd
+b43fbaf42679ea9d07215614e8ca2104 *vignettes/quickstart.Rmd
