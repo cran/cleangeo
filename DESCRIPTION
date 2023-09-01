@@ -1,6 +1,6 @@
 Package: cleangeo
-Version: 0.3
-Date: 2023-07-06
+Version: 0.3-1
+Date: 2023-09-01
 Title: Cleaning Geometries from Spatial Objects
 Authors@R: c(person("Emmanuel", "Blondel", role = c("aut", "cre"), email = "emmanuel.blondel1@gmail.com", comment = c(ORCID = "0000-0002-5870-5762")))
 Maintainer: Emmanuel Blondel <emmanuel.blondel1@gmail.com>
@@ -19,7 +19,7 @@ VignetteBuilder: knitr
 BugReports: https://github.com/eblondel/cleangeo/issues
 RoxygenNote: 7.2.3
 NeedsCompilation: no
-Packaged: 2023-07-06 20:49:41 UTC; emman
+Packaged: 2023-09-01 08:56:34 UTC; emman
 Author: Emmanuel Blondel [aut, cre] (<https://orcid.org/0000-0002-5870-5762>)
 Repository: CRAN
-Date/Publication: 2023-07-06 23:50:02 UTC
+Date/Publication: 2023-09-01 09:10:19 UTC

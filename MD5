@@ -1,6 +1,6 @@
-7046620b5570c08f452a6b3cbe67cc3c *DESCRIPTION
+d9608cbea568a9f0be1388749d742d74 *DESCRIPTION
 cb95eeb463562439690960c81097ff23 *NAMESPACE
-e33000918e4cd4c320febfdc5910c3d7 *R/cleangeo.R
+a7c52228b0d63be32c3cd1ce9baa1650 *R/cleangeo.R
 ba032d67cc06c36934cced83215d45fc *R/clgeo_Clean.R
 3cb738facdd9fa55b11b6bda5fa9ecb7 *R/clgeo_CleanByPolygonation.R
 80bfd378506acf8acea3539eeb1bbc07 *R/clgeo_CollectionReport.R
@@ -14,11 +14,11 @@ a3c58713183e4d0456a075ef91f16192 *R/clgeo_logger.R
 9bdc68e846f863b8b8dbe7ef85747a6b *build/vignette.rds
 66df7254328c1f901bfcaac60e4f56d5 *inst/doc/quickstart.R
 4a5b1c0ad7e2399d87292a2e70cf5c3d *inst/doc/quickstart.Rmd
-57f0d8cb766570bd4e53fc4872d63597 *inst/doc/quickstart.html
+cf415280884e2aeb23dfa86e491f4a5d *inst/doc/quickstart.html
 295890a8c6002cbd6f19965dc777df36 *inst/extdata/example.dbf
 77243eaa710f41ab2f47e79607741285 *inst/extdata/example.shp
 4b48fb863a4b2dc04600657226ff7ed6 *inst/extdata/example.shx
-5af15aa1daef356819200772dce03329 *man/cleangeo.Rd
+1298cd6cc475d9c641651b1bdbe49993 *man/cleangeo.Rd
 c0b75cf40e251af0d63110674ae186b0 *man/clgeo_Clean.Rd
 2ee8166749cdf21144581285e9a4d3bb *man/clgeo_CleanByPolygonation.Polygon.Rd
 e655ae55fe987cff337f24f5703b0056 *man/clgeo_CleanByPolygonation.Polygons.Rd
